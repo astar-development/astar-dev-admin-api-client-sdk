@@ -2,7 +2,8 @@
 using System.Text.Json;
 using AStar.Dev.Admin.Api.Client.Sdk.Models;
 using AStar.Dev.Api.HealthChecks;
-using Microsoft.Extensions.Logging;
+using AStar.Dev.Functional.Extensions;
+using AStar.Dev.Logging.Extensions;
 using Microsoft.Identity.Web;
 
 namespace AStar.Dev.Admin.Api.Client.Sdk.AdminApi;
@@ -10,20 +11,18 @@ namespace AStar.Dev.Admin.Api.Client.Sdk.AdminApi;
 /// <summary>
 ///     The <see href="AdminApiClient"></see> class.
 /// </summary>
-public sealed class AdminApiClient(HttpClient httpClient, ITokenAcquisition tokenAcquisitionService, ILogger<AdminApiClient> logger) : IApiClient
+public sealed class AdminApiClient(HttpClient httpClient, ITokenAcquisition tokenAcquisitionService, ILoggerAstar<AdminApiClient> logger) : IApiClient
 {
     private static readonly JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web);
 
     /// <inheritdoc />
     public async Task<HealthStatusResponse> GetHealthAsync(CancellationToken cancellationToken = default)
     {
-        logger.LogInformation("Checking the {ApiName} Health Status.", Constants.ApiName);
+        logger.LogHealthCheckStart(Constants.ApiName);
 
         try
         {
-            logger.LogInformation("Checking the {ApiName} Health Status.", Constants.ApiName);
-
-            HttpResponseMessage response = await httpClient.GetAsync("/health/ready", cancellationToken);
+            var response = await httpClient.GetAsync("/health/ready", cancellationToken);
 
             return response.IsSuccessStatusCode
                        ? (await JsonSerializer.DeserializeAsync<HealthStatusResponse>(await response.Content.ReadAsStreamAsync(cancellationToken), JsonSerializerOptions, cancellationToken))!
@@ -31,9 +30,30 @@ public sealed class AdminApiClient(HttpClient httpClient, ITokenAcquisition toke
         }
         catch (HttpRequestException ex)
         {
-            logger.LogError(500, ex, "Error: {ErrorMessage}", ex.Message);
+            logger.LogException(ex);
 
-            return new() { Status = $"Could not get a response from the {Constants.ApiName}.", };
+            return new() { Status = $"Could not get a response from the {Constants.ApiName}." };
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task<Result<string, HealthStatusResponse>> GetHealthCheckAsync(CancellationToken cancellationToken = new ())
+    {
+        logger.LogHealthCheckStart(Constants.ApiName);
+
+        try
+        {
+            var response = await httpClient.GetAsync("/health/ready", cancellationToken);
+
+            return response.IsSuccessStatusCode
+                       ? (await JsonSerializer.DeserializeAsync<HealthStatusResponse>(await response.Content.ReadAsStreamAsync(cancellationToken), JsonSerializerOptions, cancellationToken))!
+                       : ReturnLoggedFailure(response);
+        }
+        catch (HttpRequestException ex)
+        {
+            logger.LogException(ex);
+
+            return new HealthStatusResponse { Status = $"Could not get a response from the {Constants.ApiName}." };
         }
     }
 
@@ -41,22 +61,53 @@ public sealed class AdminApiClient(HttpClient httpClient, ITokenAcquisition toke
     ///     The GetSiteConfigurationAsync method will get the User Configuration.
     /// </summary>
     /// <returns>The Site Configuration - populated or empty</returns>
-    public async Task<IEnumerable<SiteConfiguration>> GetSiteConfigurationAsync()
+    public async Task<Result<string, IEnumerable<SiteConfiguration>>> GetSiteConfigurationAsync()
     {
-        string token = await tokenAcquisitionService.GetAccessTokenForUserAsync(["api://2ca26585-5929-4aae-86a7-a00c3fc2d061/ToDoList.Write",]);
+        var token = await tokenAcquisitionService.GetAccessTokenForUserAsync(["api://2ca26585-5929-4aae-86a7-a00c3fc2d061/ToDoList.Write"]);
 
-        // logger.LogDebug("Token: {Token}", token);
-        httpClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
-        HttpResponseMessage response = await httpClient.GetAsync("site-configurations?version=1.0");
+        httpClient.AddBearerToken(token);
+        var response = await GetSafelyAsync<IEnumerable<SiteConfiguration>>("site-configurations?version=1.0");
 
-        return (await response.Content.ReadFromJsonAsync<IEnumerable<SiteConfiguration>>())!;
+        return response.IsSuccess
+                   ? response
+                   : ReturnLoggedFailure("GetSiteConfiguration", response.Error);
+    }
+
+    private async Task<Result<string, TResponse>> GetSafelyAsync<TResponse>( string uri)
+    {
+        try
+        {
+            var response = await httpClient.GetAsync(uri);
+
+            if(response.IsSuccessStatusCode)
+            {
+                return (await response.Content.ReadFromJsonAsync<TResponse>())!;
+            }
+
+            logger.LogApiCallFailed("AStar.Dev.Admin.Api", uri, $"StatusCode: {response.StatusCode}, ResponseCode: {response.ReasonPhrase}");
+
+            return Result<string, TResponse>.Failure($"Call to {uri} failed with {(response.ReasonPhrase ?? response?.ReasonPhrase)}")!;
+        }
+        catch(Exception ex)
+        {
+            logger.LogException(ex);
+
+            return Result<string, TResponse>.Failure(ex.Message)!;
+        }
     }
 
     private HealthStatusResponse ReturnLoggedFailure(HttpResponseMessage response)
     {
-        logger.LogInformation("The {ApiName} Health failed - {FailureReason}.", Constants.ApiName, response.ReasonPhrase);
+        logger.LogHealthCheckFailure(Constants.ApiName, response.ReasonPhrase ?? "Failure reason not known");
 
-        return new() { Status = $"Health Check failed - {response.ReasonPhrase}.", };
+        return new() { Status = $"Health Check failed - {response.ReasonPhrase}." };
+    }
+
+    private string ReturnLoggedFailure(string endpointName, string? reasonPhrase)
+    {
+        logger.LogApiCallFailed(Constants.ApiName, endpointName,reasonPhrase ?? "Failure reason not known");
+
+        return $"Call to {endpointName} failed - {reasonPhrase}.";
     }
 
     //

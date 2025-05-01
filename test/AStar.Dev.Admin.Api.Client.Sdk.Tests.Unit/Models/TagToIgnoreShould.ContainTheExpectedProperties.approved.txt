@@ -1,0 +1,4 @@
+﻿{
+  "value": "Value not relevant here",
+  "ignoreImage": true
+}

@@ -9,13 +9,16 @@
                 The <see href="AdminApiClient"></see> class.
             </summary>
         </member>
-        <member name="M:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient.#ctor(System.Net.Http.HttpClient,Microsoft.Identity.Web.ITokenAcquisition,Microsoft.Extensions.Logging.ILogger{AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient})">
+        <member name="M:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient.#ctor(System.Net.Http.HttpClient,Microsoft.Identity.Web.ITokenAcquisition,AStar.Dev.Logging.Extensions.ILoggerAstar{AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient})">
             <summary>
                 The <see href="AdminApiClient"></see> class.
             </summary>
         </member>
         <member name="M:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient.GetHealthAsync(System.Threading.CancellationToken)">
-            <inheritdoc/>
+            <inheritdoc />
+        </member>
+        <member name="M:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient.GetHealthCheckAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
         </member>
         <member name="M:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient.GetSiteConfigurationAsync">
             <summary>
@@ -34,16 +37,14 @@
             </summary>
         </member>
         <member name="P:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiConfiguration.BaseUrl">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="P:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiConfiguration.Scopes">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="T:AStar.Dev.Admin.Api.Client.Sdk.Constants">
             <summary>
-                The
-                <see cref="T:AStar.Dev.Admin.Api.Client.Sdk.Constants"/>
-                class containing the project-specific constants.
+                The <see cref="T:AStar.Dev.Admin.Api.Client.Sdk.Constants" /> class containing the project-specific constants.
             </summary>
         </member>
         <member name="F:AStar.Dev.Admin.Api.Client.Sdk.Constants.ApiName">
@@ -297,12 +298,11 @@
             <summary>
             </summary>
         </member>
-        <member name="M:AStar.Dev.Admin.Api.Client.Sdk.ServiceCollectionExtensions.AddAdminApiClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient})">
+        <member name="M:AStar.Dev.Admin.Api.Client.Sdk.ServiceCollectionExtensions.AddAdminApiClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             </summary>
             <param name="services"></param>
             <param name="configuration"></param>
-            <param name="logger"></param>
             <returns></returns>
         </member>
     </members>

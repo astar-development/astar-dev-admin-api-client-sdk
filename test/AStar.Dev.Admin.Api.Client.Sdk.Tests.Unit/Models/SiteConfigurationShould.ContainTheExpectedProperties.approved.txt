@@ -1,0 +1,9 @@
+﻿{
+  "id": 1,
+  "loginEmailAddress": "not@relevant.com",
+  "username": "username not relevant here",
+  "password": "Nope, not this!",
+  "siteConfigurationSlug": "slug-not-relevant-here",
+  "baseUrl": "https://not.relevant.here",
+  "loginUrl": "/login/not/relevant/here"
+}

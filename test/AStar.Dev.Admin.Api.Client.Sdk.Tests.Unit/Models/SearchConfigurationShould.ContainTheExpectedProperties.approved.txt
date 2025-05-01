@@ -1,0 +1,28 @@
+﻿{
+  "id": 1,
+  "baseUrl": "https://not.relevant.here",
+  "loginUrl": "/not/relevant/here",
+  "searchCategories": [
+    {
+      "id": "111",
+      "order": 2,
+      "name": "Name NotRelevant Here",
+      "lastKnownImageCount": 8,
+      "lastPageVisited": 9,
+      "totalPages": 7
+    }
+  ],
+  "searchString": "",
+  "topWallpapers": "",
+  "searchStringPrefix": "",
+  "searchStringSuffix": "",
+  "subscriptions": "",
+  "imagePauseInSeconds": 5,
+  "startingPageNumber": 0,
+  "totalPages": 9,
+  "useHeadless": false,
+  "subscriptionsStartingPageNumber": 0,
+  "subscriptionsTotalPages": 0,
+  "topWallpapersTotalPages": 0,
+  "topWallpapersStartingPageNumber": 0
+}

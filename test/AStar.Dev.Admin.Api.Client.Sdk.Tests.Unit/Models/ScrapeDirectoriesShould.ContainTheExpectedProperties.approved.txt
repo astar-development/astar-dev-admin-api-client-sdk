@@ -1,0 +1,8 @@
+﻿{
+  "id": 1,
+  "rootDirectory": "Root Directory Not Relevant Here",
+  "baseSaveDirectory": "Base Save Directory Not Relevant Here",
+  "baseDirectory": "Base Directory Not Relevant Here",
+  "baseDirectoryFamous": "Base Directory Famous Not Relevant Here",
+  "subDirectoryName": "Sub Directory Not Relevant Here"
+}

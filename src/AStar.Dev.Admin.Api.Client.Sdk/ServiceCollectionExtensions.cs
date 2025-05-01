@@ -2,7 +2,6 @@ using AStar.Dev.Admin.Api.Client.Sdk.AdminApi;
 using AStar.Dev.Api.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
 
 namespace AStar.Dev.Admin.Api.Client.Sdk;
@@ -15,18 +14,17 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="configuration"></param>
-    /// <param name="logger"></param>
     /// <returns></returns>
-    public static IServiceCollection AddAdminApiClient(this IServiceCollection services, IConfiguration configuration, ILogger<AdminApiClient> logger)
+    public static IServiceCollection AddAdminApiClient(this IServiceCollection services, IConfiguration configuration)
     {
-        IConfigurationSection configurationSection = configuration.GetSection(AdminApiConfiguration.SectionLocation);
+        var configurationSection = configuration.GetSection(AdminApiConfiguration.SectionLocation);
 
         _ = services.AddOptions<AdminApiConfiguration>()
                     .Bind(configurationSection)
                     .ValidateDataAnnotations()
                     .ValidateOnStart();
 
-        services.AddScoped<IApiClient, AdminApiClient>();
+        _ = services.AddScoped<IApiClient, AdminApiClient>();
 
         // _ = services.AddHttpClient<AdminApiClient>()
         //             .ConfigureHttpClient((serviceProvider, client) =>
@@ -41,7 +39,7 @@ public static class ServiceCollectionExtensions
         //                                                                                                                                .Json));
         //                                  });
 
-        services.AddDownstreamApi(nameof(AdminApiClient), configuration.GetSection(AdminApiConfiguration.SectionLocation));
+        _ = services.AddDownstreamApi(nameof(AdminApiClient), configuration.GetSection(AdminApiConfiguration.SectionLocation));
 
         return services;
     }

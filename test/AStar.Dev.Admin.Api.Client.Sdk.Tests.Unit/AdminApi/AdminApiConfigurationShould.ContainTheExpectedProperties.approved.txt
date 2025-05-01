@@ -1,0 +1,6 @@
+﻿{
+  "baseUrl": "https://www.example.com",
+  "scopes": [
+    "Not Relevant Here"
+  ]
+}
