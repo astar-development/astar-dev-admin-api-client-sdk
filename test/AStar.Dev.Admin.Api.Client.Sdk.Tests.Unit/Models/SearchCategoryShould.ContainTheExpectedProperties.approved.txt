@@ -1,0 +1,8 @@
+﻿{
+  "id": "1",
+  "order": 3,
+  "name": "Name Not Relevant Here",
+  "lastKnownImageCount": 1,
+  "lastPageVisited": 2,
+  "totalPages": 4
+}
