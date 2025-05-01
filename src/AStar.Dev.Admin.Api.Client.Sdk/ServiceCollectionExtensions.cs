@@ -1,7 +1,9 @@
+using System.Net.Mime;
 using AStar.Dev.Admin.Api.Client.Sdk.AdminApi;
 using AStar.Dev.Api.HealthChecks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 
 namespace AStar.Dev.Admin.Api.Client.Sdk;
@@ -26,20 +28,17 @@ public static class ServiceCollectionExtensions
 
         _ = services.AddScoped<IApiClient, AdminApiClient>();
 
-        // _ = services.AddHttpClient<AdminApiClient>()
-        //             .ConfigureHttpClient((serviceProvider, client) =>
-        //                                  {
-        //                                      client.BaseAddress = serviceProvider
-        //                                                           .GetRequiredService<IOptions<AdminApiConfiguration>>().Value
-        //                                                           .BaseUrl;
-        //
-        //                                      client.DefaultRequestHeaders.Accept.Add(
-        //                                                                              new
-        //                                                                                  MediaTypeWithQualityHeaderValue(MediaTypeNames.Application
-        //                                                                                                                                .Json));
-        //                                  });
+        _ = services.AddHttpClient<AdminApiClient>()
+                    .ConfigureHttpClient((serviceProvider, client) =>
+                                         {
+                                             client.BaseAddress = serviceProvider
+                                                                  .GetRequiredService<IOptions<AdminApiConfiguration>>().Value
+                                                                  .BaseUrl;
 
-        _ = services.AddDownstreamApi(nameof(AdminApiClient), configuration.GetSection(AdminApiConfiguration.SectionLocation));
+                                             client.DefaultRequestHeaders.Accept.Add(new(MediaTypeNames.Application.Json));
+                                         });
+
+        // _ = services.AddDownstreamApi(nameof(AdminApiClient), configuration.GetSection(AdminApiConfiguration.SectionLocation));
 
         return services;
     }

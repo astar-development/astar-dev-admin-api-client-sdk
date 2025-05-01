@@ -26,6 +26,30 @@
             </summary>
             <returns>The Site Configuration - populated or empty</returns>
         </member>
+        <member name="M:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient.GetModelsToIgnoreAsync">
+            <summary>
+                The GetModelsToIgnoreAsync method will get the models to ignore.
+            </summary>
+            <returns>A collection of 0 or more models to ignore</returns>
+        </member>
+        <member name="M:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient.GetScrapeDirectoriesAsync">
+            <summary>
+                The GetScrapeDirectoriesAsync method will get the Scrape Directories.
+            </summary>
+            <returns>The Scrape Directories - populated or empty</returns>
+        </member>
+        <member name="M:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient.GetSearchConfigurationAsync">
+            <summary>
+                The GetSearchConfigurationAsync method will get the Search Configuration.
+            </summary>
+            <returns>The Search Configuration - populated or empty</returns>
+        </member>
+        <member name="M:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiClient.GetTagsToIgnoreAsync">
+            <summary>
+                The GetTagsToIgnoreAsync method will get the Tags to Ignore.
+            </summary>
+            <returns>A collection of 0 or more Tags to Ignore</returns>
+        </member>
         <member name="T:AStar.Dev.Admin.Api.Client.Sdk.AdminApi.AdminApiConfiguration">
             <summary>
                 The <see href="AdminApiConfiguration"></see> class containing the current configuration settings.

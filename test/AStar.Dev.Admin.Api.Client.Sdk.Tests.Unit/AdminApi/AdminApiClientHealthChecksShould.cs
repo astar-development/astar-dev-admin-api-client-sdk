@@ -15,7 +15,7 @@ public class AdminApiClientHealthChecksShould
 
         var response = await sut.GetHealthCheckAsync();
 
-        response.IsSuccess.ShouldBeTrue();
+        response.IsFailure.ShouldBeTrue();
         response.Value?.Description.ShouldBe("Unable to retrieve the description of the Health Status");
         response.Value?.Status.ShouldBe("Could not get a response from the AStar.Dev.Admin.Api.");
     }
@@ -44,7 +44,7 @@ public class AdminApiClientHealthChecksShould
     [Fact]
     public async Task ReturnExpectedMessageFromGetHealthAsyncWhenCheckSucceeds()
     {
-        var handler = new MockSuccessHttpMessageHandler("");
+        var handler = new MockSuccessHttpMessageHandler("Health");
         var sut     = AdminApiClientFactory.Create(handler);
 
         var response = await sut.GetHealthAsync();

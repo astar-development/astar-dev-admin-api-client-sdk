@@ -21,7 +21,7 @@ public class AdminApiClientGetSiteConfigurationShould
     [Fact]
     public async Task ReturnExpectedFailureMessageFromGetSiteConfigurationAsyncWhenCheckFails()
     {
-        var sut = AdminApiClientFactory.CreateInternalServerErrorClient("Health Check failed.");
+        var sut = AdminApiClientFactory.CreateInternalServerErrorClient("SiteConfiguration");
 
         var response = await sut.GetSiteConfigurationAsync();
 
@@ -31,7 +31,7 @@ public class AdminApiClientGetSiteConfigurationShould
     [Fact]
     public async Task ReturnExpectedMessageFromGetSiteConfigurationAsyncWhenCheckSucceeds()
     {
-        var handler = new MockSuccessHttpMessageHandler("");
+        var handler = new MockSuccessHttpMessageHandler("SiteConfigurations");
         var sut     = AdminApiClientFactory.Create(handler);
 
         var response = await sut.GetSiteConfigurationAsync();
